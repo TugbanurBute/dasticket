@@ -2,9 +2,13 @@ package com.ticketsale.dasticket.controller;
 
 import com.ticketsale.dasticket.dto.CreateEventRequest;
 import com.ticketsale.dasticket.dto.EventResponse;
+import com.ticketsale.dasticket.dto.UpdateEventRequest;
 import com.ticketsale.dasticket.service.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,12 +28,30 @@ public class EventController {
     }
 
     @GetMapping
-    public List<EventResponse> getAllEvents() {
-        return eventService.getAllEvents();
+    public Page<EventResponse> getAllEvents(Pageable pageable) {
+        return eventService.getAllEvents(pageable);
     }
 
     @GetMapping("/{id}")
     public EventResponse getEvent(@PathVariable UUID id){
         return eventService.getEvent(id);
+    }
+
+    @PutMapping("/{id}")
+    public EventResponse updateEvent(@PathVariable UUID id,
+                                     @RequestBody UpdateEventRequest updateEventRequest){
+        return eventService.updateEvent(updateEventRequest,id);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable UUID id){
+        eventService.deleteEvent(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public List<EventResponse> searchEvents(
+            @RequestParam String keyword) {
+        return eventService.searchEvents(keyword);
     }
 }
