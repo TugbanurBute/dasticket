@@ -1,6 +1,7 @@
 package com.ticketsale.dasticket.controller;
 
 import com.ticketsale.dasticket.dto.CreateEventRequest;
+import com.ticketsale.dasticket.dto.EventFilterRequest;
 import com.ticketsale.dasticket.dto.EventResponse;
 import com.ticketsale.dasticket.dto.UpdateEventRequest;
 import com.ticketsale.dasticket.service.EventService;
@@ -28,8 +29,10 @@ public class EventController {
     }
 
     @GetMapping
-    public Page<EventResponse> getAllEvents(Pageable pageable) {
-        return eventService.getAllEvents(pageable);
+    public Page<EventResponse> getAllEvents(
+            EventFilterRequest filter,
+            Pageable pageable) {
+        return eventService.filterEvents(filter,pageable);
     }
 
     @GetMapping("/{id}")

@@ -1,14 +1,17 @@
 package com.ticketsale.dasticket.service;
 
 import com.ticketsale.dasticket.dto.CreateEventRequest;
+import com.ticketsale.dasticket.dto.EventFilterRequest;
 import com.ticketsale.dasticket.dto.EventResponse;
 import com.ticketsale.dasticket.dto.UpdateEventRequest;
 import com.ticketsale.dasticket.entity.Event;
 import com.ticketsale.dasticket.exception.EventNotFoundException;
 import com.ticketsale.dasticket.repository.EventRepository;
+import com.ticketsale.dasticket.specification.EventSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -80,6 +83,52 @@ public class EventService {
                 keyword
         );
         return events.stream().map(this::mapToResponse).toList();
+    }
+
+    public Page<EventResponse> filterEvents(
+            EventFilterRequest filter,
+            Pageable pageable) {
+
+        Specification<Event> specification = null;
+
+        if(filter.getCity() != null) {
+            specification = specification == null
+                    ? EventSpecification.hasCity(filter.getCity())
+                    : specification.and(EventSpecification.hasCity(filter.getCity()));
+        }
+
+        if(filter.getArtist() != null) {
+            specification = specification == null
+                    ? EventSpecification.hasArtist(filter.getArtist())
+                    : specification.and(EventSpecification.hasArtist(filter.getArtist()));
+        }
+
+        if(filter.getMaxPrice() != null) {
+            specification = specification == null
+                    ? EventSpecification.hasMaxPrice(filter.getMaxPrice())
+                    : specification.and(EventSpecification.hasMaxPrice(filter.getMaxPrice()));
+        }
+
+        if(filter.getMinPrice() != null) {
+            specification = specification == null
+                    ? EventSpecification.hasMinPrice(filter.getMinPrice())
+                    : specification.and(EventSpecification.hasMinPrice(filter.getMinPrice()));
+        }
+
+        if(filter.getFromDate() != null) {
+            specification = specification == null
+                    ? EventSpecification.hasFromDate(filter.getFromDate())
+                    : specification.and(EventSpecification.hasFromDate(filter.getFromDate()));
+        }
+
+        if(filter.getToDate() != null) {
+            specification = specification == null
+                    ? EventSpecification.hasToDate(filter.getToDate())
+                    : specification.and(EventSpecification.hasToDate(filter.getToDate()));
+        }
+
+        Page<Event> events = eventRepository.findAll(specification,pageable);
+        return events.map(this::mapToResponse);
     }
 
     private EventResponse mapToResponse(Event event) {
