@@ -91,44 +91,28 @@ public class EventService {
 
         Specification<Event> specification = null;
 
-        if(filter.getCity() != null) {
-            specification = specification == null
-                    ? EventSpecification.hasCity(filter.getCity())
-                    : specification.and(EventSpecification.hasCity(filter.getCity()));
-        }
+        specification = addSpecification(specification,EventSpecification.hasCity(filter.getCity()));
+        specification = addSpecification(specification,EventSpecification.hasArtist(filter.getArtist()));
+        specification = addSpecification(specification,EventSpecification.hasFromDate(filter.getFromDate()));
+        specification = addSpecification(specification,EventSpecification.hasToDate(filter.getToDate()));
+        specification = addSpecification(specification,EventSpecification.hasMaxPrice(filter.getMaxPrice()));
+        specification = addSpecification(specification,EventSpecification.hasMinPrice(filter.getMinPrice()));
 
-        if(filter.getArtist() != null) {
-            specification = specification == null
-                    ? EventSpecification.hasArtist(filter.getArtist())
-                    : specification.and(EventSpecification.hasArtist(filter.getArtist()));
-        }
+        Page<Event> events = eventRepository.findAll(specification, pageable);
 
-        if(filter.getMaxPrice() != null) {
-            specification = specification == null
-                    ? EventSpecification.hasMaxPrice(filter.getMaxPrice())
-                    : specification.and(EventSpecification.hasMaxPrice(filter.getMaxPrice()));
-        }
-
-        if(filter.getMinPrice() != null) {
-            specification = specification == null
-                    ? EventSpecification.hasMinPrice(filter.getMinPrice())
-                    : specification.and(EventSpecification.hasMinPrice(filter.getMinPrice()));
-        }
-
-        if(filter.getFromDate() != null) {
-            specification = specification == null
-                    ? EventSpecification.hasFromDate(filter.getFromDate())
-                    : specification.and(EventSpecification.hasFromDate(filter.getFromDate()));
-        }
-
-        if(filter.getToDate() != null) {
-            specification = specification == null
-                    ? EventSpecification.hasToDate(filter.getToDate())
-                    : specification.and(EventSpecification.hasToDate(filter.getToDate()));
-        }
-
-        Page<Event> events = eventRepository.findAll(specification,pageable);
         return events.map(this::mapToResponse);
+    }
+
+    private Specification<Event> addSpecification(
+            Specification<Event> current,
+            Specification<Event> next) {
+        if (next == null) {
+            return current;
+        }
+        if (current == null) {
+            return next;
+        }
+        return current.and(next);
     }
 
     private EventResponse mapToResponse(Event event) {
