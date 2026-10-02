@@ -13,7 +13,10 @@ public class EventSpecification {
             return null;
         }
         return (root,query,criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("city"),city);
+                criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("city")),
+                        "%" + city.toLowerCase() + "%"
+                );
     }
 
     public static Specification<Event> hasArtist(String artist) {
@@ -21,7 +24,21 @@ public class EventSpecification {
             return null;
         }
         return (root,query,criteriaBuilder) ->
-                criteriaBuilder.equal(root.get("artist"),artist);
+                criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("artist")),
+                        "%" + artist.toLowerCase() + "%"
+                );
+    }
+
+    public static Specification<Event> hasVenue(String venue) {
+        if(venue == null || venue.isBlank()) {
+            return null;
+        }
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("venue")),
+                        "%" + venue.toLowerCase() + "%"
+                );
     }
 
     public static Specification<Event> hasMinPrice(BigDecimal minPrice) {

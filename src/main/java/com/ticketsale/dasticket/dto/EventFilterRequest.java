@@ -18,5 +18,5 @@ public class EventFilterRequest {
     private BigDecimal maxPrice;
     private LocalDateTime fromDate;
     private LocalDateTime toDate;
-
+    private String venue;
 }

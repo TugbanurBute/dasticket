@@ -93,6 +93,7 @@ public class EventService {
 
         specification = addSpecification(specification,EventSpecification.hasCity(filter.getCity()));
         specification = addSpecification(specification,EventSpecification.hasArtist(filter.getArtist()));
+        specification = addSpecification(specification,EventSpecification.hasVenue(filter.getVenue()));
         specification = addSpecification(specification,EventSpecification.hasFromDate(filter.getFromDate()));
         specification = addSpecification(specification,EventSpecification.hasToDate(filter.getToDate()));
         specification = addSpecification(specification,EventSpecification.hasMaxPrice(filter.getMaxPrice()));
