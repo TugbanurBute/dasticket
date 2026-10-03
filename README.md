@@ -1,115 +1,110 @@
 # DasTicket
 
-> A software engineering journey showing how a simple monolithic application evolves into a production-ready distributed system.
+DasTicket is a backend application for managing concerts and events.
 
-DasTicket is a backend-focused ticket sales platform built from scratch. The project follows the evolution of a real software product, where every architectural decision is driven by an actual business problem instead of adding technologies just for demonstration.
-
-This repository is accompanied by a blog series that documents the engineering decisions behind each milestone.
+The project is being developed step by step to demonstrate how a real-world backend application evolves from a simple CRUD service into a production-ready system.
 
 ---
 
-## Philosophy
-
-Every technology in this repository exists because a real problem required it.
-
-The goal is not to build a project with as many technologies as possible.
-
-The goal is to understand when and why those technologies become necessary.
-
----
-
-# Current Tech Stack
+## Tech Stack
 
 - Java 21
-- Spring Boot 4.1
+- Spring Boot 4
 - Spring Data JPA
 - PostgreSQL
-- Docker
+- Docker & Docker Compose
 - Maven
-- Lombok
 
 ---
 
-# Current Features
+## Features
 
-## Event Management
+### Implemented
 
-- Create Event
-- Get All Events
-- Get Event by Id
-- Update Event
-- Delete Event
-
-## Search
-
-- Search by title
-- Search by artist
-- Search by venue
-- Search by city
-
-## Pagination
-
-- Pageable support
-- Configurable page size
-- Page metadata
-
-## Validation
-
+- Create, update and delete events
+- Event search by keyword
+- Dynamic filtering (city, artist, venue, price and date range)
+- Pagination
+- Sorting
 - Bean Validation
-- Future event validation
-- Global exception handling
+- Dockerized application
+- PostgreSQL persistence with Docker Volume
+
+### Planned
+
+- Global Exception Handling
+- Swagger / OpenAPI
+- Unit & Integration Tests
+- Redis Cache
+- RabbitMQ
+- JWT Authentication
+- GitHub Actions CI/CD
 
 ---
 
-# Project Progress
+## Running with Docker
 
-| Status | Feature |
-|--------|---------|
-| ✅ | Spring Boot project setup |
-| ✅ | Dockerized PostgreSQL |
-| ✅ | Event CRUD |
-| ✅ | Validation |
-| ✅ | Global Exception Handler |
-| ✅ | Search |
-| ✅ | Pagination |
-| ⏳ | Sorting |
-| ⏳ | Advanced Filtering |
-| ⏳ | Swagger Documentation |
-| ⏳ | Authentication |
-| ⏳ | Ticket Purchase |
-| ⏳ | Payment Integration |
-| ⏳ | Redis |
-| ⏳ | RabbitMQ |
-| ⏳ | Outbox Pattern |
-| ⏳ | Docker Image |
-| ⏳ | GitHub Actions |
-| ⏳ | Monitoring |
-| ⏳ | Microservice Migration |
+Build and start the application
+
+```bash
+docker compose up --build
+```
+
+The API will be available at
+
+```
+http://localhost:8080
+```
 
 ---
 
-# Roadmap
+## API Examples
 
-The project intentionally starts as a simple monolith.
+Create Event
 
-Instead of introducing modern technologies from day one, each new component will be added only when the application reaches a point where the current solution becomes insufficient.
+```
+POST /events
+```
 
-The goal is to demonstrate **why** a technology is introduced, not only **how** to configure it.
+Get Events
+
+```
+GET /events
+```
+
+Filter Events
+
+```
+GET /events?city=Berlin&artist=Coldplay&page=0&size=10
+```
 
 ---
 
-# Blog Series
+## Decision Log
 
-Each engineering decision will be documented in a companion blog series.
+- Dynamic filtering implemented using Spring Data JPA Specifications.
+- Case-insensitive filtering supported for text fields.
+- Docker Compose used to run both PostgreSQL and the application.
+- Database configuration externalized using environment variables.
+- Search endpoint kept separate from advanced filtering for clarity.
 
-Episode 1 — Bootstrap the Backend
 
-Episode 2 — CRUD & Validation
+--- 
 
-Episode 3 — Search
 
-Episode 4 — Pagination
-
-Episode 5 — Sorting
-
-...
+                            Bruno / Postman
+                                   │
+                                   ▼
+                          Spring Boot REST API
+                                   │
+                                   ▼
+                            Spring Data JPA
+                                   │
+                                   ▼
+                               PostgreSQL
+        
+                  ┌──────────────────────────────┐
+                  │        Docker Compose        │
+                  ├──────────────┬───────────────┤
+                  │ Spring Boot  │ PostgreSQL    │
+                  └──────────────┴───────────────┘
