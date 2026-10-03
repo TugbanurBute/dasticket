@@ -13,19 +13,19 @@ import java.time.LocalDateTime;
 @Setter
 public class CreateEventRequest {
 
-    @NotBlank
+    @NotBlank(message = "Title cannot be empty")
     private String title;
 
-    @NotBlank
+    @NotBlank(message = "Description cannot be empty")
     private String description;
 
-    @NotBlank
+    @NotBlank(message = "Artist cannot be empty")
     private String artist;
 
-    @NotBlank
+    @NotBlank(message = "Venue cannot be empty")
     private String venue;
 
-    @NotBlank
+    @NotBlank(message = "City cannot be empty")
     private String city;
 
     @Future
