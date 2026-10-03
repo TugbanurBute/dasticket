@@ -2,9 +2,7 @@
 services:
   postgres:
     image: postgres:17
-
     container_name: dasticket-postgres
-
     restart: always
 
     ports:
@@ -17,6 +15,20 @@ services:
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: dasticket-app
+
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/dasticket
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
 
 volumes:
   postgres_data:
