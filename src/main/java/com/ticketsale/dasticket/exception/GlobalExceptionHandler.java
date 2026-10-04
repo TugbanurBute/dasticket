@@ -18,14 +18,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EventNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleEventNotFound(EventNotFoundException ex,
                                                              HttpServletRequest request) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.NOT_FOUND.value())
-                .error(HttpStatus.NOT_FOUND.name())
-                .message(ex.getMessage())
-                .path(request.getRequestURI())
-                .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                errorResponseBuilder(
+                        HttpStatus.NOT_FOUND,
+                        ex.getMessage(),
+                        null,
+                        request.getRequestURI()
+                ));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -42,27 +41,37 @@ public class GlobalExceptionHandler {
                     );
                 });
 
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error(HttpStatus.BAD_REQUEST.name())
-                .message("Validation failed")
-                .validationErrors(validationError)
-                .path(request.getRequestURI())
-                .build();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponseBuilder(
+                HttpStatus.BAD_REQUEST,
+                "Validation failed",
+                validationError,
+                request.getRequestURI()
+        ));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex,
                                                                 HttpServletRequest request) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponseBuilder(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "An unexpected error occurred.",
+                null,
+                request.getRequestURI()
+        ));
+    }
+
+    private ErrorResponse errorResponseBuilder(
+            HttpStatus status,
+            String message,
+            Map<String,String> validationErrors,
+            String path) {
+        return ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
-                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .error(HttpStatus.INTERNAL_SERVER_ERROR.name())
-                .message("An unexpected error occurred.")
-                .path(request.getRequestURI())
+                .status(status.value())
+                .error(status.name())
+                .message(message)
+                .validationErrors(validationErrors)
+                .path(path)
                 .build();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 }

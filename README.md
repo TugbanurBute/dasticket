@@ -80,6 +80,16 @@ GET /events?city=Berlin&artist=Coldplay&page=0&size=10
 
 ---
 
+### Global Exception Handling
+
+- Added centralized exception handling using `@RestControllerAdvice`
+- Standardized API error responses
+- Added validation error responses with field-level details
+- Added generic exception handling for unexpected server errors
+
+---
+
+
 ## Decision Log
 
 - Dynamic filtering implemented using Spring Data JPA Specifications.
