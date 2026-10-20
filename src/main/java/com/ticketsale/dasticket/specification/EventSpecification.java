@@ -5,6 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 public class EventSpecification {
 
@@ -15,7 +16,7 @@ public class EventSpecification {
         return (root,query,criteriaBuilder) ->
                 criteriaBuilder.like(
                         criteriaBuilder.lower(root.get("city")),
-                        "%" + city.toLowerCase() + "%"
+                        "%" + city.toLowerCase(Locale.ROOT) + "%"
                 );
     }
 

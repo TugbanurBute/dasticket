@@ -89,6 +89,15 @@ GET /events?city=Berlin&artist=Coldplay&page=0&size=10
 
 ---
 
+## API Documentation
+
+Interactive API documentation is available through Swagger UI.
+
+- Swagger UI: http://localhost:8080/swagger-ui/index.html
+- OpenAPI JSON: http://localhost:8080/v3/api-docs
+
+---
+
 
 ## Decision Log
 
